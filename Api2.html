@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="enter">
+        <input id="title" type="title" placeholder="tittle" />
+        <input id="chekbox" type="checkbox" />
+        <button onclick="add()">Add</button>
+    </div>
+    <div id="container">
+
+    </div>
+</body>
+
+</html>
+<script>
+    var url = "https://json-server-mocker-masai.herokuapp.com/tasks"
+
+    fetch(url)
+        .then(function (res) {
+            // console.log('res:', res);
+
+            return res.json();
+        })
+
+        .then(function (final_res) {
+
+            appendProducts(final_res);
+        })
+
+        .catch(function (err) {
+            console.log('err:', err);
+
+        })
+
+    function appendProducts(data) {
+        data.forEach(el => {
+            if (el.status !== undefined) {
+                if (el.status === true) {
+                    var x = document.getElementById("container");
+                    var div = document.createElement("div")
+                    div.innerText = el.title;
+                    div.style.color = 'green'
+                    x.append(div)
+
+                } else {
+                    var x = document.getElementById("container");
+                    var div = document.createElement("div")
+                    div.innerText = el.title;
+                    div.style.color = 'red'
+                    x.append(div)
+                }
+            }
+
+
+
+
+        });
+    }
+
+    function add() {
+        var title = document.getElementById("title").value;
+        var chek = document.getElementById("chekbox").checked;
+
+        var data = {
+            "title": title,
+            "status": chek
+        }
+        data = JSON.stringify(data);
+        // localStorage.setItem("Task", data);
+        fetch("https://json-server-mocker-masai.herokuapp.com/tasks", {
+            method: "POST",
+            body: data,
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log(data);
+    }
+
+</script>
